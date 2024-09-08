@@ -37,6 +37,7 @@ export function RsiAnalysis() {
       setLoading(true);
       const result = await getData('/rsi');
       console.log(result);
+      
       setMockData(result);
     } catch (err) {
       setError("Failed to fetch data.");
