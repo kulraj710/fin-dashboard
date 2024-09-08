@@ -35,11 +35,12 @@ const SearchCard: React.FC<SearchCardProps> = ({ ticker, setTicker, timeframe, s
               <SelectValue placeholder="Select timeframe" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1d">1 Day</SelectItem>
-              <SelectItem value="1w">1 Week</SelectItem>
+              {/* <SelectItem value="1d">1 Day</SelectItem>
+              <SelectItem value="1w">1 Week</SelectItem> */}
               <SelectItem value="1m">1 Month</SelectItem>
               <SelectItem value="3m">3 Months</SelectItem>
               <SelectItem value="1y">1 Year</SelectItem>
+              <SelectItem value="3y">3 Years</SelectItem>
             </SelectContent>
           </Select>
           <Button onClick={handleSearch}>
