@@ -27,7 +27,7 @@ def get_rsi_data_and_stock_price(ticker='AAPL', start=dt.datetime(2024,1,1), end
         RSI = 100.0 - (100.0 / (1.0 + relative_strength))
 
         combined = pd.DataFrame()
-        combined['AdjClose'] = data['Adj Close']
+        combined['AdjClose'] = round(data['Adj Close'], 2)
         combined['rsi'] = round(RSI, 3)
         combined['date'] = data.index.strftime('%d-%m-%y')
 
@@ -39,4 +39,4 @@ def get_rsi_data_and_stock_price(ticker='AAPL', start=dt.datetime(2024,1,1), end
         return rsi_data_json
     except Exception as e:
         print(e)
-        return "Something went wrong"
+        return e
