@@ -45,6 +45,7 @@ const RSIChart: React.FC<RSIChartProps> = ({ticker, showGrid, mockData, rsiValue
   }, [mockData.length]);
 
   return (
+    <>
     <div className="flex flex-col md:flex-row gap-6">
       {/* First Card: RSI Chart */}
       <div className="w-full md:w-3/4">
@@ -56,7 +57,7 @@ const RSIChart: React.FC<RSIChartProps> = ({ticker, showGrid, mockData, rsiValue
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[400px] w-full">
+            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={mockData}>
                   <CartesianGrid
@@ -104,7 +105,7 @@ const RSIChart: React.FC<RSIChartProps> = ({ticker, showGrid, mockData, rsiValue
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex justify-center items-center h-[400px] text-lg font-semibold">
+            <div className="flex justify-center items-center h-[300px] text-lg font-semibold">
               {rsiValue >= 70 ? (
                 <span className="text-red-600">Overbought</span>
               ) : rsiValue <= 30 ? (
@@ -117,6 +118,72 @@ const RSIChart: React.FC<RSIChartProps> = ({ticker, showGrid, mockData, rsiValue
         </Card>
       </div>
     </div>  
+    
+    <div className="flex flex-col md:flex-row gap-6">
+      {/* First Card: Adj Close Chart */}
+      <div className="w-full md:w-3/4">
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Adj Close</CardTitle>
+            <CardDescription>
+              Adjusted Close price for {ticker || 'selected ticker'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[250px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={mockData}>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    horizontal={showGrid}
+                  />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={<CustomXAxisTick visibleTicksIndex={visibleTicksIndex} />} 
+                    interval={0}
+                  />
+                  <YAxis/>
+                  <Tooltip />
+
+                  <Line
+                    type="monotone"
+                    dataKey="AdjClose"
+                    stroke="#8884d8"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    
+      {/* Second Card: Overbought/Oversold Indicator */}
+      <div className="w-full md:w-1/4">
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>RSI Status</CardTitle>
+            <CardDescription>
+              Status of the stock based on RSI
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center items-center h-[250px] text-lg font-semibold">
+              {rsiValue >= 70 ? (
+                <span className="text-red-600">Overbought</span>
+              ) : rsiValue <= 30 ? (
+                <span className="text-green-600">Oversold</span>
+              ) : (
+                <span>Neutral</span>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+    </>
   )
 }
 
