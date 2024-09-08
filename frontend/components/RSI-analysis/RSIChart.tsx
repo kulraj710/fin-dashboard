@@ -72,9 +72,13 @@ const RSIChart: React.FC<RSIChartProps> = ({ticker, showGrid, mockData, rsiValue
                   <YAxis domain={[0, 100]} />
                   <Tooltip />
 
-                  <ReferenceArea y1={60} y2={70} strokeOpacity={0.3} fill="red" fillOpacity={0.1}/>
-                  <ReferenceArea y1={70} y2={80} strokeOpacity={0.3} fill="red" fillOpacity={0.2} />
-                  <ReferenceArea y1={80} y2={100} strokeOpacity={0.3} fill="red" fillOpacity={0.4}/>
+                  <ReferenceArea y1={70} y2={80} strokeOpacity={0.3} fill="red" fillOpacity={0.1}/>
+                  <ReferenceArea y1={80} y2={90} strokeOpacity={0.3} fill="red" fillOpacity={0.2} />
+                  <ReferenceArea y1={90} y2={100} strokeOpacity={0.3} fill="red" fillOpacity={0.4}/>
+
+                  <ReferenceArea y1={0} y2={30} strokeOpacity={0.3} fill="green" fillOpacity={0.1}/>
+                  
+
 
                   <Line
                     type="monotone"

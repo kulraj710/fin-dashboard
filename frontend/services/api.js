@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // Create an Axios instance with the base URL and other global settings
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api', // Your Flask API base URL
-  timeout: 10000, // You can set a timeout (optional)
+  baseURL: 'http://localhost:5000/api',
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
 

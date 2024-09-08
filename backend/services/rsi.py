@@ -3,7 +3,7 @@ import pandas_datareader as web
 import yfinance as yf
 import datetime as dt
 
-def get_rsi_data_and_stock_price(ticker='GOOG', start=dt.datetime(2024,1,1), end=dt.datetime.now()):
+def get_rsi_data_and_stock_price(ticker='AAPL', start=dt.datetime(2024,1,1), end=dt.datetime.now()):
     try:
         data = yf.download(ticker,start=start, end=end)
         delta = data['Adj Close'].diff(1)
@@ -29,7 +29,7 @@ def get_rsi_data_and_stock_price(ticker='GOOG', start=dt.datetime(2024,1,1), end
         combined = pd.DataFrame()
         combined['AdjClose'] = data['Adj Close']
         combined['rsi'] = round(RSI, 3)
-        combined['date'] = data.index.strftime('%d-%m')
+        combined['date'] = data.index.strftime('%d-%m-%y')
 
     
         clean_combined = combined.dropna(axis=0, how='any')

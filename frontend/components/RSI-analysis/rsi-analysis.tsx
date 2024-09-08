@@ -6,19 +6,6 @@ import RSIChart from "./RSIChart";
 import ChartSettings from "./ChartSettings";
 import { getData } from "../../services/api";
 
-// Mock data for the chart
-// const mockData = [
-//   { date: "2023-01-01", rsi: 70 },
-//   { date: "2023-01-02", rsi: 65 },
-//   { date: "2023-01-03", rsi: 60 },
-//   { date: "2023-01-04", rsi: 67 },
-//   { date: "2023-01-05", rsi: 80 },
-//   { date: "2023-01-06", rsi: 33 },
-//   { date: "2023-01-07", rsi: 40 },
-//   { date: "2023-01-08", rsi: 35 },
-//   { date: "2023-01-09", rsi: 66 },
-//   { date: "2023-01-10", rsi: 29 },
-// ];
 let rsiValue = 70;
 
 export function RsiAnalysis() {
