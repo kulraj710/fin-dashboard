@@ -1,27 +1,22 @@
 from flask_restful import Resource
-from flask import jsonify
+from flask import jsonify, request
 from services.rsi import get_rsi_data_and_stock_price
-
+from utils.helper import convert_timeframe_to_datetime
 class RsiAPI(Resource):
     def get(self):
-        rsi_data = get_rsi_data_and_stock_price()
-    
-        stock_data = [
-            {"date": "23-01-01", "rsi": 70},
-            {"date": "23-01-02", "rsi": 65},
-            {"date": "23-01-03", "rsi": 60},
-            {"date": "23-01-04", "rsi": 67},
-            {"date": "23-01-05", "rsi": 80},
-            {"date": "23-01-06", "rsi": 33},
-            {"date": "23-01-07", "rsi": 55},
-            {"date": "23-01-08", "rsi": 35},
-            {"date": "23-01-09", "rsi": 66},
-            {"date": "23-01-10", "rsi": 29},
-        ]
-        print(type(rsi_data))
-        print(rsi_data)
-        
-        return jsonify(rsi_data)
+        try:
+            ticker = request.args.get('ticker', '')
+            timeframe = request.args.get('timeframe', '3m')
+            print(timeframe)
+            start_date = convert_timeframe_to_datetime(timeframe)
+            
+            rsi_data = get_rsi_data_and_stock_price(ticker=ticker, start=start_date)
+
+            return jsonify(rsi_data)
+        except Exception as e:
+            print(e)
+            return jsonify({'error': "Your request can not be processed. Make sure you are connected to the internet and ticker symbol actually exists"}), 404
+       
 
     def post(self):
         # Add logic for handling POST requests to add stock data
