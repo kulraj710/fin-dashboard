@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { BarChart3, LineChart, PieChart, TrendingUp, Briefcase, Activity, GitBranch, Search, BellIcon, UserCircle, Github } from 'lucide-react'
+import Link from 'next/link'
 
 export function HomepageFooter() {
   return (
@@ -74,6 +75,7 @@ export function HomepageFooter() {
               <p className="text-xs text-gray-500 dark:text-gray-400">Track your investments and performance</p>
             </CardContent>
           </Card>
+          <Link href="/rsi">
           <Card className="bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">RSI Analysis</CardTitle>
@@ -84,6 +86,7 @@ export function HomepageFooter() {
               <p className="text-xs text-gray-500 dark:text-gray-400">Identify overbought and oversold conditions</p>
             </CardContent>
           </Card>
+          </Link>
           <Card className="bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Market Overview</CardTitle>
