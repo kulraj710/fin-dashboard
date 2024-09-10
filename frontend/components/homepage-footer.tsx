@@ -107,9 +107,10 @@ export function HomepageFooter() {
               <p className="text-xs text-gray-500 dark:text-gray-400">Real-time news and market analysis</p>
             </CardContent>
           </Card>
+          <Link href="/option-pricing">
           <Card className="bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Option Chain</CardTitle>
+              <CardTitle className="text-sm font-medium">Option Pricing</CardTitle>
               <GitBranch className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
@@ -117,6 +118,7 @@ export function HomepageFooter() {
               <p className="text-xs text-gray-500 dark:text-gray-400">Explore put and call options data</p>
             </CardContent>
           </Card>
+          </Link>
         </div>
       </main>
 
