@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_restful import Api
 from api.rsi import RsiAPI
+from api.backtest import BacktestStatAPI
 # from api.user import UserAPI
 from flask_cors import CORS
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -14,6 +16,7 @@ api = Api(app)
 
 # Register API Resources
 api.add_resource(RsiAPI, '/api/rsi')
+api.add_resource(BacktestStatAPI, '/api/backtest', methods=['POST'])
 # api.add_resource(UserAPI, '/api/users')
 
 if __name__ == '__main__':
