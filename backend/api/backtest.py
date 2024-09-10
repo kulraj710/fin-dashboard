@@ -6,10 +6,7 @@ class BacktestStatAPI(Resource):
     def post(self):
         try:
             res = backtest_result_in_html()
-            # with open(res, 'r') as file:
-            #     html_content = file.read()
-            #     print(html_content)
-        # Return the HTML content to be displayed in the browser
+        
             response = make_response(res)
             response.mimetype = 'text/html'
             return response
