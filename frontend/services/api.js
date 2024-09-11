@@ -17,3 +17,14 @@ export const getData = async (endpoint) => {
     throw error;
   }
 };
+
+export const postData = async (endpoint, data) => {
+  try {
+    const url = "http://localhost:5000/api" + endpoint
+    const response = await axios.post(url, data);
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error('Error posting data:', error);
+    throw error; // Re-throw the error for further handling
+  }
+};
