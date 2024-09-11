@@ -2,53 +2,24 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-// import { DatePicker } from "@/components/ui/date-picker"
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip as RechartsTooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import Link from "next/link";
-import { Menu, ChevronRight, ChevronLeft } from "lucide-react";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Line } from "recharts";
+import { ChevronRight, ChevronLeft, SidebarOpen } from "lucide-react";
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+import InputParams from "./InputParams";
+import ResultsCard from "./ResultsCard";
+import LineChartComp from "../ui/lineChartComp";
+import { postData } from "@/services/api";
 
 export default function OptionPricingUI() {
+
   const [useTicker, setUseTicker] = useState(false);
-  const [ticker, setTicker] = useState("AAPL");
+  const [ticker, setTicker] = useState("");
   const [spotPrice, setSpotPrice] = useState(100);
   const [strikePrice, setStrikePrice] = useState(100);
-  const [maturityDate, setMaturityDate] = useState<Date | undefined>(new Date());
+  const [selectMaturityDate, setSelectMaturityDate] = useState<any>();
   const [riskFreeRate, setRiskFreeRate] = useState(0.05);
   const [volatility, setVolatility] = useState(20);
   const [model, setModel] = useState("black-scholes");
@@ -58,9 +29,20 @@ export default function OptionPricingUI() {
     option2: false,
     option3: false,
   });
+  const [optionStockData, setOptionStockData] = useState()
+  const [greeksData, setGreeksData] = useState()
+  const [maturityData, setMaturityData] = useState()
+  const [callPrice, setCallPrice] = useState(-1)
+  const [putPrice, setPutPrice] = useState(-1)
+  const [currency, setCurrency] = useState("$")
+  // const [showResults, setShowResults] = useState(false);
+  const [showChart, setShowChart] = useState(false);
+  const [cmp, setCmp] = useState(0)
+  const [calculatedVol, setCalculatedVol] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   // Dummy data for charts
-  const dummyData = Array.from({ length: 100 }, (_, i) => ({
+  const dummyData = Array.from({ length: 10 }, (_, i) => ({
     x: i,
     call: Math.random() * 10 + 5,
     put: Math.random() * 8 + 2,
@@ -72,75 +54,52 @@ export default function OptionPricingUI() {
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  const handleCheckboxChange = (name: keyof typeof checkboxes) => {
-    setCheckboxes((prev) => ({ ...prev, [name]: !prev[name] }));
-  };
+  const calculateOptionPrice = async () => {
+    setLoading(true)
+    let data = {
+      'ticker' : ticker,
+      'spot_price' : spotPrice,
+      'strike_price' : strikePrice,
+      'days_to_maturity' : new Date(selectMaturityDate).toISOString(),
+      'risk_free_rate' : riskFreeRate,
+      'volatility' : volatility,
+    }
+    console.table(data)
+    const response = await postData("/option-pricing/black_scholes", data);
+    console.log(response)
+
+    if (ticker.endsWith(".NS")){
+      setCurrency("₹")
+    }
+
+    setOptionStockData(response.option_price_vs_stock_price)
+    setCallPrice(response.call_price)
+    setPutPrice(response.put_price)
+    setCmp(response.cmp)
+    setCalculatedVol(response.volatility)
+    setGreeksData(response.greeks)
+    setMaturityData(response.maturity_vs_price)
+
+    setShowChart(true)
+    setLoading(false)
+  }
 
   return (
     <TooltipProvider>
       <div className="min-h-screen flex flex-col">
-        <nav className="bg-primary text-primary-foreground p-4">
-          <div className="container mx-auto flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold">
-              Option Pricing Models
-            </Link>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Select Model</SheetTitle>
-                  <SheetDescription>
-                    Choose an option pricing model to use.
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="py-4">
-                  <Select value={model} onValueChange={setModel}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="black-scholes">
-                        Black-Scholes
-                      </SelectItem>
-                      <SelectItem value="binomial">Binomial</SelectItem>
-                      <SelectItem value="monte-carlo">Monte Carlo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </nav>
+        <Navbar model={model} setModel={setModel} />
 
         <div className="flex-grow flex">
           <aside
-            className={`bg-gray-100 transition-all duration-300 ease-in-out ${
+            className={`bg-gray-100  ${
               sidebarOpen ? "w-64" : "w-0"
             } overflow-hidden`}
           >
-            <div className="p-4">
-              <h2 className="text-lg font-semibold mb-4">Options</h2>
-              <div className="space-y-2">
-                {Object.entries(checkboxes).map(([key, value]) => (
-                  <div key={key} className="flex items-center">
-                    <Checkbox
-                      id={key}
-                      checked={value}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(key as keyof typeof checkboxes)
-                      }
-                    />
-                    <label htmlFor={key} className="ml-2 text-sm font-medium">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Sidebar
+              checkboxes={checkboxes}
+              sidebarOpen={SidebarOpen}
+              setCheckboxes={setCheckboxes}
+            />
           </aside>
 
           <main className="flex-grow container mx-auto p-4">
@@ -169,192 +128,63 @@ export default function OptionPricingUI() {
                   <CardTitle>Input Parameters</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Checkbox
-                            id="use-ticker"
-                            checked={useTicker}
-                            onCheckedChange={(checked) =>
-                              setUseTicker(checked as boolean)
-                            }
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Use a stock ticker symbol instead of manually entering
-                          the spot price
-                        </TooltipContent>
-                      </Tooltip>
-                      <Label htmlFor="use-ticker">Use Ticker Symbol</Label>
-                    </div>
-
-                    {useTicker ? (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div>
-                            <Label htmlFor="ticker">Ticker Symbol</Label>
-                            <Input
-                              id="ticker"
-                              value={ticker}
-                              onChange={(e) => setTicker(e.target.value)}
-                              placeholder="e.g., AAPL, GOOGL"
-                            />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Enter the stock ticker symbol (e.g., AAPL for Apple
-                          Inc.)
-                        </TooltipContent>
-                      </Tooltip>
-                    ) : (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div>
-                            <Label htmlFor="spot-price">
-                              Underlying Spot Price
-                            </Label>
-                            <Input
-                              id="spot-price"
-                              type="number"
-                              value={spotPrice}
-                              onChange={(e) =>
-                                setSpotPrice(Number(e.target.value))
-                              }
-                            />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Current price of the underlying asset
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <Label htmlFor="strike-price">Strike Price</Label>
-                          <Input
-                            id="strike-price"
-                            type="number"
-                            value={strikePrice}
-                            onChange={(e) =>
-                              setStrikePrice(Number(e.target.value))
-                            }
-                          />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        The price at which the option can be exercised
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <Label htmlFor="maturity-date">Maturity Date</Label>
-                          <Calendar
-                            mode="single"
-                            id="maturity-date"
-                            selected={maturityDate}
-                            onSelect={setMaturityDate}
-                            className="rounded-md border"
-                          />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        The expiration date of the option
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <Label htmlFor="risk-free-rate">Risk-Free Rate</Label>
-                          <Input
-                            id="risk-free-rate"
-                            type="number"
-                            value={riskFreeRate}
-                            onChange={(e) =>
-                              setRiskFreeRate(Number(e.target.value))
-                            }
-                            step="0.01"
-                          />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        The theoretical rate of return of an investment with
-                        zero risk
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <Label htmlFor="volatility">
-                            Volatility (Sigma): {volatility}%
-                          </Label>
-                          <Slider
-                            id="volatility"
-                            min={0}
-                            max={100}
-                            step={1}
-                            value={[volatility]}
-                            onValueChange={(value) => setVolatility(value[0])}
-                          />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        A measure of the amount of uncertainty or risk about the
-                        size of changes in an asset's value
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Button className="w-full">Calculate</Button>
-                  </div>
+                  <InputParams
+                    loading={loading}
+                    useTicker={useTicker}
+                    riskFreeRate={riskFreeRate}
+                    setRiskFreeRate={setRiskFreeRate}
+                    selectMaturityDate={selectMaturityDate}
+                    setSelectMaturityDate={setSelectMaturityDate}
+                    setSpotPrice={setSpotPrice}
+                    setStrikePrice={setStrikePrice}
+                    setTicker={setTicker}
+                    setUseTicker={setUseTicker}
+                    ticker={ticker}
+                    spotPrice={spotPrice}
+                    strikePrice={strikePrice}
+                    volatility={volatility}
+                    setVolatility={setVolatility}
+                    calculateOptionPrice={calculateOptionPrice}
+                  />
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Results</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p>Call Option Price: $10.50</p>
-                    <p>Put Option Price: $5.25</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <ResultsCard callPrice={callPrice} putPrice={putPrice} currency={currency} cmp={cmp} calculatedVol={calculatedVol}/>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
+              
+            {showChart ? <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <Card>
                 <CardHeader>
                   <CardTitle>Option Price vs. Stock Price</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={dummyData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="x" />
-                      <YAxis />
-                      <RechartsTooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="call"
-                        stroke="#8884d8"
-                        name="Call Option"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="put"
-                        stroke="#82ca9d"
-                        name="Put Option"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <LineChartComp
+                    data={optionStockData}
+                    strokeDasharray="3 3"
+                    height={400}
+                    xdatakey="stockPrice"
+                    xlabel={{ value: 'Stock Price', position: 'insideBottomRight', offset: -6 }}
+                    ylabel={{ value: 'Option Price', angle: -90, position: 'insideLeft' }}
+                    ydomain={['dataMin - 5']} 
+                    yallowDataOverflow={true} 
+                  >
+                    <Line
+                      type="monotone"
+                      dataKey="callPrice"
+                      stroke="#8884d8"
+                      strokeWidth={3}
+                      dot={false}
+                      name="Call Option"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="putPrice" 
+                      stroke="#EA4335" 
+                      strokeWidth={3}
+                      dot={false}
+                      name="Put Option"
+                    />
+                  </LineChartComp>
                 </CardContent>
               </Card>
 
@@ -363,39 +193,45 @@ export default function OptionPricingUI() {
                   <CardTitle>Option Greeks vs. Stock Price</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={dummyData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="x" />
-                      <YAxis />
-                      <RechartsTooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="delta"
-                        stroke="#8884d8"
-                        name="Delta"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="gamma"
-                        stroke="#82ca9d"
-                        name="Gamma"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="theta"
-                        stroke="#ffc658"
-                        name="Theta"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="vega"
-                        stroke="#ff7300"
-                        name="Vega"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <LineChartComp
+                    strokeDasharray="3 3"
+                    data={greeksData}
+                    xdatakey="price"
+                    height={400}
+                  >
+                    <Line
+                      type="monotone"
+                      dataKey="delta"
+                      dot={false}
+                      stroke="#8884d8"
+                      strokeWidth={2}
+                      name="Delta"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="gamma"
+                      strokeWidth={2}
+                      dot={false}
+                      stroke="#82ca9d"
+                      name="Gamma"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="theta"
+                      strokeWidth={2}
+                      dot={false}
+                      stroke="#ffc658"
+                      name="Theta"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="vega"
+                      strokeWidth={2}
+                      dot={false}
+                      stroke="#ff7300"
+                      name="Vega"
+                    />
+                  </LineChartComp>
                 </CardContent>
               </Card>
 
@@ -404,53 +240,53 @@ export default function OptionPricingUI() {
                   <CardTitle>Option Price vs. Days to Maturity</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={dummyData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="x" />
-                      <YAxis />
-                      <RechartsTooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="call"
-                        stroke="#8884d8"
-                        name="Call Option"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="put"
-                        stroke="#82ca9d"
-                        name="Put Option"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <LineChartComp
+                    strokeDasharray="3 3"
+                    xdatakey="days_to_maturity"
+                    height={400}
+                    data={maturityData}
+                  >
+                    <Line
+                      type="monotone"
+                      dataKey="call_price"
+                      dot={false}
+                      stroke="#8884d8"
+                      strokeWidth={3}
+                      name="Call Option"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="put_price"
+                      strokeWidth={3}
+                      dot={false}
+                      stroke="#82ca9d"
+                      name="Put Option"
+                    />
+                  </LineChartComp>
                 </CardContent>
               </Card>
 
-              <Card>
+              {/* <Card>
                 <CardHeader>
                   <CardTitle>Monte Carlo Simulation</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={dummyData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="x" />
-                      <YAxis />
-                      <RechartsTooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="call"
-                        stroke="#8884d8"
-                        name="Stock Price"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <LineChartComp
+                    strokeDasharray="3 3"
+                    xdatakey="x"
+                    height={400}
+                    data={dummyData}
+                  >
+                    <Line
+                      type="monotone"
+                      dataKey="call"
+                      stroke="#8884d8"
+                      name="Stock Price"
+                    />
+                  </LineChartComp>
                 </CardContent>
-              </Card>
-            </div>
+              </Card> */}
+            </div> : "Plots will appear here"}
           </main>
         </div>
       </div>
