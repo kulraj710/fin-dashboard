@@ -4,13 +4,21 @@ from api.rsi import RsiAPI
 from api.backtest import BacktestStatAPI, PlotFileAPI
 from api.blackscholes import BlackScholesPricing
 from flask_cors import CORS
+from config.config import get_config
+import os
+from dotenv import load_dotenv
 
+# Load environment variables from .env
+load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
 
-# Enable CORS for localhost:3000
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://finance-tools-alpha.vercel.app"]}})
+# Load config based on environment
+app.config.from_object(get_config())
+
+
+CORS(app, resources={r"/api/*": {"origins": app.config['CORS_ALLOWED_ORIGINS']}})
 
 api = Api(app)
 
@@ -21,4 +29,4 @@ api.add_resource(PlotFileAPI, '/api/plots/<string:filename>')
 api.add_resource(BlackScholesPricing, '/api/option-pricing/black_scholes')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
