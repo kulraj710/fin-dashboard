@@ -1,5 +1,4 @@
 import pandas as pd
-import pandas_datareader as web
 import yfinance as yf
 import datetime as dt
 
