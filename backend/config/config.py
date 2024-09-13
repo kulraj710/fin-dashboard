@@ -10,19 +10,19 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
-    CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "https://finance-tools-alpha.vercel.app"]  
+    CORS_ALLOWED_ORIGINS = ['https://finance-tools-alpha.vercel.app', 'http://localhost:3000']
     
     
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
-    CORS_ALLOWED_ORIGINS = ["https://finance-tools-alpha.vercel.app"]
+    CORS_ALLOWED_ORIGINS = ['https://finance-tools-alpha.vercel.app']
 
 
 class TestingConfig(Config):
     """Testing configuration"""
     TESTING = True
-    CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+    CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 
 
 

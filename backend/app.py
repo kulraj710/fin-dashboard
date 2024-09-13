@@ -6,20 +6,23 @@ from api.blackscholes import BlackScholesPricing
 from flask_cors import CORS
 from config.config import get_config
 # import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 # Load environment variables from .env
-# load_dotenv()
+load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
 
 # Load config based on environment
-# app.config.from_object(get_config())
+app.config.from_object(get_config())
 
+allowed_origins = app.config['CORS_ALLOWED_ORIGINS']
 
-# CORS(app, resources={r"/api/*": {"origins": app.config['CORS_ALLOWED_ORIGINS']}})
-CORS(app, resources={r"/api/*": {"origins": ['https://finance-tools-alpha.vercel.app', 'http://localhost:5000']}})
+print(allowed_origins)
+
+CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
+# CORS(app, resources={r"/api/*": {"origins": ['https://finance-tools-alpha.vercel.app', 'http://localhost:3000']}})
 
 api = Api(app)
 
