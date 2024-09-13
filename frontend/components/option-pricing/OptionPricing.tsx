@@ -40,17 +40,7 @@ export default function OptionPricingUI() {
   const [cmp, setCmp] = useState(0)
   const [calculatedVol, setCalculatedVol] = useState(0)
   const [loading, setLoading] = useState(false)
-
-  // Dummy data for charts
-  const dummyData = Array.from({ length: 10 }, (_, i) => ({
-    x: i,
-    call: Math.random() * 10 + 5,
-    put: Math.random() * 8 + 2,
-    delta: Math.random() * 0.5,
-    gamma: Math.random() * 0.1,
-    theta: Math.random() * -0.1,
-    vega: Math.random() * 0.2,
-  }));
+  
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
