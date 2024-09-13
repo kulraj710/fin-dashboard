@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const axiosInstance = axios.create({
-  baseURL: process.env.backendBaseUrl,
+  baseURL: process.env.backendBaseUrlProduction,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -20,8 +20,8 @@ export const getData = async (endpoint) => {
 
 export const postData = async (endpoint, data) => {
   try {
-    const url = "http://localhost:5000/api" + endpoint
-    const response = await axios.post(url, data);
+    // const url = "http://localhost:5000/api" + endpoint
+    const response = await axiosInstance.post(endpoint, data);
     return response.data; // Return the response data
   } catch (error) {
     console.error('Error posting data:', error);
