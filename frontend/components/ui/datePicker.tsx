@@ -1,7 +1,7 @@
 "use client"
 
-import * as React from "react"
-import { format } from "date-fns"
+import React, {useState} from "react"
+import { format, isBefore } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -17,10 +17,33 @@ interface dateProps{
     date : Date | undefined;
     setDate : (value: any) => void;
     id? : string | undefined;
+    error? : string | undefined;
+    onlyFutureDates? : boolean;
 }
 
-export function DatePicker({date, setDate, id}:dateProps) {
+export function DatePicker({date, setDate, id, error = '', onlyFutureDates = false}:dateProps) {
   
+  const [errorMessage, setErrorMessage] = useState(''); 
+  
+  const isPastDate = (date : Date) => {
+    const today = new Date();
+    return isBefore(date, today);
+  };
+
+  const handleOnSelect = (date : Date | undefined) => {
+    if (date === undefined){
+      return;
+    }
+    if (!isPastDate(date)){
+      setDate(date);
+      setErrorMessage('')
+    }
+    else {
+      setDate(undefined)
+      setErrorMessage(error);
+    }
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -40,10 +63,14 @@ export function DatePicker({date, setDate, id}:dateProps) {
           mode="single"
           id={id}
           selected={date}
-          onSelect={setDate}
+          onSelect={(date) => {
+            onlyFutureDates ? handleOnSelect(date) : setDate(date)
+          }}
           initialFocus
         />
       </PopoverContent>
+      {errorMessage && <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>}
+
     </Popover>
   )
 }

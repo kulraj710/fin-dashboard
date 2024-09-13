@@ -5,12 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import {Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+ 
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import { DatePicker } from "../ui/datePicker";
 
 interface inputParmsProps {
@@ -29,7 +27,8 @@ interface inputParmsProps {
   volatility: number;
   setVolatility: (value: number) => void;
   calculateOptionPrice: () => void;
-  loading : boolean;
+  loading: boolean;
+  errorMessage? : string;
 }
 
 const InputParams: React.FC<inputParmsProps> = ({
@@ -49,7 +48,10 @@ const InputParams: React.FC<inputParmsProps> = ({
   setStrikePrice,
   selectMaturityDate,
   setSelectMaturityDate,
+  errorMessage = ''
 }) => {
+
+
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-2">
@@ -78,7 +80,7 @@ const InputParams: React.FC<inputParmsProps> = ({
                 id="ticker"
                 value={ticker}
                 onChange={(e) => setTicker(e.target.value)}
-                placeholder="e.g., AAPL, GOOGL"
+                placeholder="e.g., AAPL, GOOG, ITC.NS, MRF.NS, ZOMATO.NS"
               />
             </div>
           </TooltipTrigger>
@@ -129,6 +131,8 @@ const InputParams: React.FC<inputParmsProps> = ({
               id="maturity-date"
               date={selectMaturityDate}
               setDate={setSelectMaturityDate}
+              onlyFutureDates
+              error="You can not select date in the past!"
             />
           </div>
         </TooltipTrigger>
@@ -156,17 +160,24 @@ const InputParams: React.FC<inputParmsProps> = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <Label htmlFor="volatility">
-              Volatility (Sigma): {volatility}%
-            </Label>
-            <Slider
-              id="volatility"
-              min={0}
-              max={100}
-              step={1}
-              value={[volatility]}
-              onValueChange={(value) => setVolatility(value[0])}
-            />
+            {useTicker ? (
+              <Label>
+                Volatility (Sigma) will be automatically calculated.
+              </Label>
+            ) : (
+              <>
+                <Label htmlFor="volatility">
+                  Volatility (Sigma): {volatility}%
+                </Label>
+                <Input
+                  id="volatility"
+                  type="number"
+                  value={volatility}
+                  onChange={(e) => setVolatility(Number(e.target.value))}
+                  step="0.01"
+                />
+              </>
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent>
@@ -175,7 +186,17 @@ const InputParams: React.FC<inputParmsProps> = ({
         </TooltipContent>
       </Tooltip>
 
-      <Button onClick={calculateOptionPrice} disabled={loading}>{loading ? "Calculating.." : "Calculate"}</Button>
+      <Button onClick={calculateOptionPrice} disabled={loading}>
+        {loading ? "Calculating.." : "Calculate"}
+      </Button>
+
+      {errorMessage ? <Alert variant="destructive">
+      <ExclamationTriangleIcon className="h-4 w-4" />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>
+        {errorMessage}
+      </AlertDescription>
+    </Alert> : null}
     </div>
   );
 };

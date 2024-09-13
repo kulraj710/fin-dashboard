@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: 'https://global-jere-studypara-17f6cd73.koyeb.app/api',
-  // baseURL: NEXT_PUBLIC_backendBaseUrlProduction,
+  // baseURL: 'http://localhost:5000/api',
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -20,11 +20,10 @@ export const getData = async (endpoint) => {
 
 export const postData = async (endpoint, data) => {
   try {
-    // const url = "http://localhost:5000/api" + endpoint
     const response = await axiosInstance.post(endpoint, data);
-    return response.data; // Return the response data
+    return response.data;
   } catch (error) {
     console.error('Error posting data:', error);
-    throw error; // Re-throw the error for further handling
+    throw error;
   }
 };
