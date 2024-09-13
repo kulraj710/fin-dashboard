@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: NEXT_PUBLIC_backendBaseUrlProduction,
+  baseURL: 'https://global-jere-studypara-17f6cd73.koyeb.app/api',
+  // baseURL: NEXT_PUBLIC_backendBaseUrlProduction,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
