@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { BarChart3, LineChart, PieChart, TrendingUp, Briefcase, Activity, GitBranch, Search, BellIcon, UserCircle, Github } from 'lucide-react'
+import { BarChart3, LineChart, TrendingUp, Briefcase, Activity, GitBranch, Search, BellIcon, UserCircle, Github } from 'lucide-react'
 import Link from 'next/link'
 
 export function HomepageFooter() {
@@ -110,11 +110,11 @@ export function HomepageFooter() {
           <Link href="/option-pricing">
           <Card className="bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Option Pricing</CardTitle>
+              <CardTitle className="text-sm font-medium">Option analysis</CardTitle>
               <GitBranch className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">Options Analysis</div>
+              <div className="text-2xl font-bold">Options Pricing</div>
               <p className="text-xs text-gray-500 dark:text-gray-400">Explore put and call options data</p>
             </CardContent>
           </Card>
@@ -132,7 +132,7 @@ export function HomepageFooter() {
               </p>
             </div>
             <div className="flex items-center">
-              <Button variant="outline" size="sm" className="text-gray-700 dark:text-gray-200">
+              <Button variant="outline" size="sm" onClick={() => alert("I will add the link shortly! Thank you for your interest")} className="text-gray-700 dark:text-gray-200">
                 <Github className="mr-2 h-4 w-4" />
                 View on GitHub
               </Button>
