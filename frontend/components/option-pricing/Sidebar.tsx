@@ -27,7 +27,7 @@ export default function Sidebar({
           />
         </div>
       </div>
-      <div className="text-sm p-5">Note : I am currently working on implementing two new option pricing models (Monte Carlo & Binomial). It will be available from 12 Sept 2024.</div>
+      <div className="text-sm p-5">Note : I am currently working on implementing two new option pricing models (Monte Carlo & Binomial). It will be available from 18 Sept 2024.</div>
     </aside>
   );
 }
