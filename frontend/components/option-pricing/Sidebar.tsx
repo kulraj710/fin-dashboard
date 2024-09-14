@@ -1,45 +1,33 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import SelectModel from "./SelectModel";
 
 interface SidebarProps {
-  checkboxes: { [key: string]: boolean };
+  model: string;
+  setModel: (value: string) => void;
   sidebarOpen: any;
-  setCheckboxes: (value: any) => void;
 }
 
 export default function Sidebar({
-  checkboxes,
   sidebarOpen,
-  setCheckboxes,
+  model,
+  setModel,
 }: SidebarProps) {
-  const handleCheckboxChange = (name: keyof typeof checkboxes) => {
-    setCheckboxes((prev: any) => ({ ...prev, [name]: !prev[name] }));
-  };
-
   return (
     <aside
-      className={`bg-gray-100 ${sidebarOpen ? "w-64" : "w-0"} overflow-hidden`}
+      className={`bg-gray-100 ${sidebarOpen ? "w-74" : "w-0"} overflow-hidden`}
     >
       <div className="p-4">
-        <h2 className="text-lg font-semibold mb-4">Options</h2>
+        <h2 className="text-lg font-semibold mb-4">Change Model</h2>
         <div className="space-y-2">
-          {Object.entries(checkboxes).map(([key, value]) => (
-            <div key={key} className="flex items-center">
-              <Checkbox
-                id={key}
-                checked={value}
-                onCheckedChange={() =>
-                  handleCheckboxChange(key as keyof typeof checkboxes)
-                }
-              />
-              <label htmlFor={key} className="ml-2 text-sm font-medium">
-                {key.charAt(0).toUpperCase() + key.slice(1)}
-              </label>
-            </div>
-          ))}
+          <SelectModel
+            model={model}
+            setModel={setModel}
+          />
         </div>
       </div>
+      <div className="text-sm p-5">Note : I am currently working on implementing two new option pricing models (Monte Carlo & Binomial). It will be available from 12 Sept 2024.</div>
     </aside>
   );
 }

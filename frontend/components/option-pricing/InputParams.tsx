@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,7 @@ interface inputParmsProps {
   calculateOptionPrice: () => void;
   loading: boolean;
   errorMessage? : string;
+  showDelayMessage? : boolean;
 }
 
 const InputParams: React.FC<inputParmsProps> = ({
@@ -48,9 +49,9 @@ const InputParams: React.FC<inputParmsProps> = ({
   setStrikePrice,
   selectMaturityDate,
   setSelectMaturityDate,
-  errorMessage = ''
+  errorMessage = '',
+  showDelayMessage
 }) => {
-
 
   return (
     <div className="space-y-4">
@@ -189,6 +190,13 @@ const InputParams: React.FC<inputParmsProps> = ({
       <Button onClick={calculateOptionPrice} disabled={loading}>
         {loading ? "Calculating.." : "Calculate"}
       </Button>
+      {(showDelayMessage && !errorMessage) ?
+      <Alert className="bg-yellow-100">
+        {/* <AlertTitle>Notice</AlertTitle> */}
+        <AlertDescription>
+        As the server is hosted on the shared instance, it might take up to 20 seconds for the response. Thank you for your patience.
+        </AlertDescription>
+      </Alert> : null}
 
       {errorMessage ? <Alert variant="destructive">
       <ExclamationTriangleIcon className="h-4 w-4" />

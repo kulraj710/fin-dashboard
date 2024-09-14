@@ -1,24 +1,17 @@
 "use client"
 
 import React from 'react'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
-  import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-  } from "@/components/ui/sheet";
+  // import {
+  //   Sheet,
+  //   SheetContent,
+  //   SheetDescription,
+  //   SheetHeader,
+  //   SheetTitle,
+  //   SheetTrigger,
+  // } from "@/components/ui/sheet";
 import Link from "next/link";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+// import { Menu } from "lucide-react";
+// import { Button } from "@/components/ui/button";
 
 
 interface navbarProps{
@@ -34,7 +27,9 @@ const Navbar: React.FC<navbarProps> = ({model, setModel}) => {
             <Link href="/" className="text-2xl font-bold">
               Option Pricing Models
             </Link>
-            <Sheet>
+
+            {/* Temporarily disable sheet */}
+            {/* <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <Menu className="h-6 w-6" />
@@ -48,21 +43,10 @@ const Navbar: React.FC<navbarProps> = ({model, setModel}) => {
                   </SheetDescription>
                 </SheetHeader>
                 <div className="py-4">
-                  <Select value={model} onValueChange={setModel}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="black-scholes">
-                        Black-Scholes
-                      </SelectItem>
-                      <SelectItem value="binomial">Binomial</SelectItem>
-                      <SelectItem value="monte-carlo">Monte Carlo</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  Hello
                 </div>
               </SheetContent>
-            </Sheet>
+            </Sheet> */}
           </div>
         </nav>
   )

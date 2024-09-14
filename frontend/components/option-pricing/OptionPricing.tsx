@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Line } from "recharts";
-import { ChevronRight, ChevronLeft, SidebarOpen } from "lucide-react";
+import { ChevronLeft, SidebarOpen } from "lucide-react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import InputParams from "./InputParams";
@@ -23,11 +23,6 @@ export default function OptionPricingUI() {
   const [volatility, setVolatility] = useState(0.5);
   const [model, setModel] = useState("black-scholes");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [checkboxes, setCheckboxes] = useState({
-    option1: false,
-    option2: false,
-    option3: false,
-  });
   const [optionStockData, setOptionStockData] = useState();
   const [greeksData, setGreeksData] = useState();
   const [maturityData, setMaturityData] = useState();
@@ -39,14 +34,20 @@ export default function OptionPricingUI() {
   const [cmp, setCmp] = useState(0);
   const [calculatedVol, setCalculatedVol] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showDelayMessage, setShowDelayMessage] = useState(false)
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const calculateOptionPrice = async () => {
+
+    const timeout = setTimeout(() => {
+      setShowDelayMessage(true); 
+    }, 3000);
+
     try {
       setLoading(true);
-      setError("")
-      setShowChart(false)
+      setError("");
+      setShowChart(false);
 
       let data = {
         ticker: ticker,
@@ -60,6 +61,8 @@ export default function OptionPricingUI() {
 
       const response = await postData("/option-pricing/black_scholes", data);
       console.table(response);
+
+      clearTimeout(timeout);
 
       if (ticker.toUpperCase().endsWith(".NS")) {
         setCurrency("₹");
@@ -75,12 +78,13 @@ export default function OptionPricingUI() {
 
       setShowChart(true);
       setLoading(false);
-
     } catch (error: any) {
       setError(error.message);
-      
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setShowDelayMessage(false)
+      }, 3000);
     }
   };
 
@@ -96,23 +100,23 @@ export default function OptionPricingUI() {
             } overflow-hidden`}
           >
             <Sidebar
-              checkboxes={checkboxes}
+              model={model}
+              setModel={setModel}
               sidebarOpen={SidebarOpen}
-              setCheckboxes={setCheckboxes}
             />
           </aside>
 
           <main className="flex-grow container mx-auto p-4">
             <Button
               variant="outline"
-              size="icon"
+              size={sidebarOpen ? "icon" : "default"}
               onClick={toggleSidebar}
               className="mb-4"
             >
               {sidebarOpen ? (
                 <ChevronLeft className="h-4 w-4" />
               ) : (
-                <ChevronRight className="h-4 w-4" />
+                <>Change Model</>
               )}
             </Button>
 
@@ -146,6 +150,7 @@ export default function OptionPricingUI() {
                     setVolatility={setVolatility}
                     calculateOptionPrice={calculateOptionPrice}
                     errorMessage={error}
+                    showDelayMessage={showDelayMessage}
                   />
                 </CardContent>
               </Card>
