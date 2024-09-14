@@ -1,14 +1,18 @@
 "use client";
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
-import {Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
- 
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DatePicker } from "../ui/datePicker";
 
 interface inputParmsProps {
@@ -28,8 +32,9 @@ interface inputParmsProps {
   setVolatility: (value: number) => void;
   calculateOptionPrice: () => void;
   loading: boolean;
-  errorMessage? : string;
-  showDelayMessage? : boolean;
+  errorMessage?: string;
+  showDelayMessage?: boolean;
+  showChart: boolean;
 }
 
 const InputParams: React.FC<inputParmsProps> = ({
@@ -47,12 +52,12 @@ const InputParams: React.FC<inputParmsProps> = ({
   setSpotPrice,
   strikePrice,
   setStrikePrice,
+  showChart,
   selectMaturityDate,
   setSelectMaturityDate,
-  errorMessage = '',
-  showDelayMessage
+  errorMessage = "",
+  showDelayMessage,
 }) => {
-
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-2">
@@ -190,21 +195,31 @@ const InputParams: React.FC<inputParmsProps> = ({
       <Button onClick={calculateOptionPrice} disabled={loading}>
         {loading ? "Calculating.." : "Calculate"}
       </Button>
-      {(showDelayMessage && !errorMessage) ?
-      <Alert className="bg-yellow-100">
-        {/* <AlertTitle>Notice</AlertTitle> */}
-        <AlertDescription>
-        As the server is hosted on the shared instance, it might take up to 20 seconds for the response. Thank you for your patience.
-        </AlertDescription>
-      </Alert> : null}
+      {showDelayMessage && !errorMessage ? (
+        <Alert className="bg-yellow-100">
+          {/* <AlertTitle>Notice</AlertTitle> */}
+          <AlertDescription>
+            As the server is hosted on the shared instance, it might take up to
+            20 seconds for the response. Thank you for your patience.
+          </AlertDescription>
+        </Alert>
+      ) : null}
 
-      {errorMessage ? <Alert variant="destructive">
-      <ExclamationTriangleIcon className="h-4 w-4" />
-      <AlertTitle>Error</AlertTitle>
-      <AlertDescription>
-        {errorMessage}
-      </AlertDescription>
-    </Alert> : null}
+      {showChart ? (
+        <Alert className="bg-green-100">
+          <AlertDescription>
+            Option price calculated successfully!
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
+      {errorMessage ? (
+        <Alert variant="destructive">
+          <ExclamationTriangleIcon className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      ) : null}
     </div>
   );
 };

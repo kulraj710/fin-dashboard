@@ -146,6 +146,7 @@ export default function OptionPricingUI() {
                     ticker={ticker}
                     spotPrice={spotPrice}
                     strikePrice={strikePrice}
+                    showChart={showChart}
                     volatility={volatility}
                     setVolatility={setVolatility}
                     calculateOptionPrice={calculateOptionPrice}
