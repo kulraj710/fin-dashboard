@@ -3,7 +3,7 @@ import axios from 'axios';
 const axiosInstance = axios.create({
   baseURL: 'https://global-jere-studypara-17f6cd73.koyeb.app/api',
   // baseURL: 'http://localhost:5000/api',
-  timeout: 20000,
+  timeout: 40000,
   headers: { 'Content-Type': 'application/json' },
 });
 
