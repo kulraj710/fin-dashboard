@@ -129,7 +129,7 @@ export default function OptionPricingUI() {
               variant="outline"
               size={sidebarOpen ? "icon" : "default"}
               onClick={toggleSidebar}
-              className="mb-4"
+              className="mb-4 bg-blue-400 text-white"
             >
               {sidebarOpen ? (
                 <ChevronLeft className="h-4 w-4" />
