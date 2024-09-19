@@ -22,8 +22,8 @@ const SelectModel: React.FC<SelectModelProps> = ({ model, setModel }) => {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="black-scholes">Black-Scholes</SelectItem>
+        <SelectItem value="monte-carlo">Monte Carlo</SelectItem>
         <SelectItem value="binomial" disabled>Binomial</SelectItem>
-        <SelectItem value="monte-carlo" disabled>Monte Carlo</SelectItem>
       </SelectContent>
     </Select>
   );

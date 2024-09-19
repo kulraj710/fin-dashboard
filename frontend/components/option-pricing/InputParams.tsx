@@ -35,6 +35,11 @@ interface inputParmsProps {
   errorMessage?: string;
   showDelayMessage?: boolean;
   showChart: boolean;
+  seed: number;
+  model: string;
+  setSeed: (value: number) => void;
+  numberOfSim : number;
+  setNumberOfSim: (value: number) => void;
 }
 
 const InputParams: React.FC<inputParmsProps> = ({
@@ -43,7 +48,10 @@ const InputParams: React.FC<inputParmsProps> = ({
   volatility,
   setVolatility,
   setUseTicker,
+  seed,
+  setSeed,
   loading,
+  model,
   riskFreeRate,
   setRiskFreeRate,
   ticker,
@@ -57,6 +65,8 @@ const InputParams: React.FC<inputParmsProps> = ({
   setSelectMaturityDate,
   errorMessage = "",
   showDelayMessage,
+  numberOfSim,
+  setNumberOfSim
 }) => {
   return (
     <div className="space-y-4">
@@ -191,6 +201,52 @@ const InputParams: React.FC<inputParmsProps> = ({
           changes in an asset's value
         </TooltipContent>
       </Tooltip>
+
+     
+     {/* conditional fields */}
+
+     {(model === "monte-carlo") ?  
+     <>
+     <Tooltip>
+        <TooltipTrigger asChild>
+          <div>
+            <Label htmlFor="number-of-sims">Number of Simulations</Label>
+            <Input
+              id="number-of-sims"
+              type="number"
+              value={numberOfSim}
+              onChange={(e) => setNumberOfSim(Number(e.target.value))}
+              step="1"
+            />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          Number of simulations to be plotted on the Monte-Carlo simulation graph
+        </TooltipContent>
+      </Tooltip> 
+
+     <Tooltip>
+        <TooltipTrigger asChild>
+          <div>
+            <Label htmlFor="seed">Seed value (Optional)</Label>
+            <Input
+              id="seed"
+              type="number"
+              value={seed}
+              onChange={(e) => setSeed(Number(e.target.value))}
+              step="1"
+            />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          Seed value (optional field)
+        </TooltipContent>
+      </Tooltip> 
+      
+      </>
+      : null}
+
+
 
       <Button onClick={calculateOptionPrice} disabled={loading}>
         {loading ? "Calculating.." : "Calculate"}

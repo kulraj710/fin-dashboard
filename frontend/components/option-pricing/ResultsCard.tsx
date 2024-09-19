@@ -11,6 +11,8 @@ interface resultProps {
   cmp: number;
   calculatedVol: number;
   showChart: boolean;
+  model: string;
+  monteCarlo64 : string;
 }
 
 const ResultsCard: React.FC<resultProps> = ({
@@ -18,16 +20,18 @@ const ResultsCard: React.FC<resultProps> = ({
   putPrice,
   currency,
   cmp,
+  model,
   calculatedVol,
   showChart,
+  monteCarlo64,
 }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{showChart ? 'Results' : 'Black-Scholes Option Pricing Formula'}</CardTitle>
+        <CardTitle>{showChart ? 'Results' : `${model} Option Pricing`}</CardTitle>
       </CardHeader>
       <CardContent>
-        {!showChart ? (
+        {!showChart && model === 'black-scholes' ? (
           <Image
             src="/images/blackscholes.jpg"
             alt="Blackscholes formula"
@@ -46,9 +50,14 @@ const ResultsCard: React.FC<resultProps> = ({
               Current Market Price: {currency} {cmp}
             </p>
             <p>Calculated Volatility: {calculatedVol}</p>
-            <p>
-              Scroll Below for Plots
-            </p>
+
+            <div>
+              {model === "monte-carlo" && monteCarlo64 ? 
+
+              <Image src={monteCarlo64} height={500} width={900} alt="Monte Carlo Simulation"/> 
+              
+              : null}
+            </div>
           </div>
         )}
       </CardContent>

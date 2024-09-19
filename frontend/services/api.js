@@ -21,6 +21,11 @@ export const getData = async (endpoint) => {
 export const postData = async (endpoint, data) => {
   try {
     const response = await axiosInstance.post(endpoint, data);
+
+    if (response.data.status !== 200){
+      throw new Error(response.data.error);
+    }
+
     return response.data;
   } catch (error) {
     console.error('Error posting data:', error);

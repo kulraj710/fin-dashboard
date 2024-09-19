@@ -2,6 +2,7 @@ from flask_restful import Resource
 from flask import jsonify, request
 from services.BlackScholesModel import BlackScholesModel, get_stock_data, plot_option_price_vs_stock_price, plot_greeks, plot_option_price_vs_maturity
 from datetime import datetime
+from utils.CustomException import NoTickerFoundException
 
 def days_difference(js_date_str):
     # Convert the JavaScript-style ISO 8601 date string to a datetime object
@@ -44,10 +45,17 @@ class BlackScholesPricing(Resource):
                 "maturity_vs_price" : marutity_vs_price,
                 "greeks" : greeks_data,
                 "cmp" : round(spot_price, 2),
-                "volatility" : round(volatility, 4)
+                "volatility" : round(volatility, 4),
+                "status" : 200
             }
             
             return jsonify(res)
+        
+        except ValueError as e:
+            print(e)
+            # return jsonify({"error": str(e)})
+            return jsonify({'error': str(e), 'status' : 404})
+            
         
         except Exception as e:
             print(e)

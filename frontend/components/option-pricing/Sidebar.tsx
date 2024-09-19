@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 import SelectModel from "./SelectModel";
 
 interface SidebarProps {
@@ -27,7 +27,7 @@ export default function Sidebar({
           />
         </div>
       </div>
-      <div className="text-sm p-5">Note : I am currently working on implementing two new option pricing models (Monte Carlo & Binomial). It will be available from 19 Sept 2024.</div>
+      <div className="text-sm p-5">Note : I am currently working on implementing two new option pricing models (Monte Carlo & Binomial). It will be available from 20 Sept 2024.</div>
     </aside>
   );
 }
