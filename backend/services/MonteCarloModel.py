@@ -131,7 +131,7 @@ class MonteCarloModel:
 
         # Save the plot to a BytesIO object
         img = io.BytesIO()
-        fig.savefig(img, format="png")
+        fig.savefig(img, format="jpg")
         img.seek(0)
         plt.close(fig)
 
