@@ -1,0 +1,27 @@
+name: Deploy to EC2
+
+on:
+  workflow_dispatch:  # This allows you to manually trigger the workflow from GitHub Actions
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # This step checks out the repository's code
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v0.1.3  # Action to SSH into the EC2 instance
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        passphrase: ${{ secrets.EC2_SSH_PASSPHRASE }}  # If passphrase is set, otherwise leave it
+        script: |
+          cd option-pricing-api
+          git pull origin main
+          cd option-pricing-api/fin-dashboard/backend
+          pip install -r requirements.txt
+          sudo systemctl restart optionpricingapi
+
