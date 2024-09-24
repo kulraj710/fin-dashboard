@@ -20,9 +20,9 @@ jobs:
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
-            cd option-pricing-api
+            cd option-pricing-api/fin-dashboard
             git pull origin main
-            cd option-pricing-api/fin-dashboard/backend
+            cd backend
             pip install -r requirements.txt
             sudo systemctl restart optionpricingapi
             '
