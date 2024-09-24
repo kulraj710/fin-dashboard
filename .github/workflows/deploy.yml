@@ -25,3 +25,4 @@ jobs:
             cd option-pricing-api/fin-dashboard/backend
             pip install -r requirements.txt
             sudo systemctl restart optionpricingapi
+            '
