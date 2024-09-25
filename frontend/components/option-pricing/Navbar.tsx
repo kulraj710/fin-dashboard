@@ -22,7 +22,7 @@ interface navbarProps{
 
 const Navbar: React.FC<navbarProps> = ({model, setModel}) => {
   return (
-        <nav className="bg-primary text-primary-foreground p-4">
+        <nav className="bg-primary text-primary-foreground p-4 sticky top-0 z-50">
           <div className="container mx-auto flex justify-between items-center">
             <Link href="/" className="text-2xl font-bold">
               Option Pricing Models
