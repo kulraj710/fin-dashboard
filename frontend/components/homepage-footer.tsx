@@ -159,26 +159,16 @@ export function HomepageFooter() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-center md:text-left mb-4 md:mb-0">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Your Financial Hub
+                Financial Hub
               </h2>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                Visualize, analyze, and optimize your financial data
+                Visualize, analyze, and optimize financial data
               </p>
             </div>
             <div className="flex items-center">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  alert(
-                    "I will add the link shortly! Thank you for your interest"
-                  )
-                }
-                className="text-gray-700 dark:text-gray-200"
-              >
-                <Github className="mr-2 h-4 w-4" />
+              <Link href="https://github.com/kulraj710/fin-dashboard" className="border border-2 rounded p-2 dark:text-gray-200">
                 View on GitHub
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
