@@ -1,8 +1,13 @@
 "use client";
 
+// [TO-DO] (readibility) : Seperate ResultsCard component for each model instead of
+//                       current implementation which is just one file with multiple if-else.
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
+import monteCarloExampleImage from "../../public/images/monte-carlo-example-reliance.png";
+import ResultTable from "./ResultTable";
 
 interface resultProps {
   callPrice: number;
@@ -12,7 +17,8 @@ interface resultProps {
   calculatedVol: number;
   showChart: boolean;
   model: string;
-  monteCarlo64 : string;
+  monteCarlo64: string;
+  showMonteCarloExample: boolean;
 }
 
 const ResultsCard: React.FC<resultProps> = ({
@@ -24,14 +30,21 @@ const ResultsCard: React.FC<resultProps> = ({
   calculatedVol,
   showChart,
   monteCarlo64,
+  showMonteCarloExample,
 }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{showChart ? 'Results' : `${model} Option Pricing`}</CardTitle>
+        {model === "monte-carlo" && showMonteCarloExample ? (
+          <CardTitle>Example Response for Reliance Industries</CardTitle>
+        ) : (
+          <CardTitle>
+            {showChart ? "Results" : `${model} Option Pricing`}
+          </CardTitle>
+        )}
       </CardHeader>
       <CardContent>
-        {!showChart && model === 'black-scholes' ? (
+        {!showChart && model === "black-scholes" ? (
           <Image
             src="/images/blackscholes.jpg"
             alt="Blackscholes formula"
@@ -40,23 +53,48 @@ const ResultsCard: React.FC<resultProps> = ({
           />
         ) : (
           <div className="space-y-2">
-            <p>
-              Call Option Price: {currency} {callPrice}
-            </p>
-            <p>
-              Put Option Price: {currency} {putPrice}
-            </p>
-            <p>
-              Current Market Price: {currency} {cmp}
-            </p>
-            <p>Calculated Volatility: {calculatedVol}</p>
+            {showMonteCarloExample && model === "monte-carlo" ? (
+              <>
+                <ResultTable
+                  currency={"₹"}
+                  callPrice={86.216}
+                  putPrice={18.218}
+                  cmp={2987.9}
+                  volatility={0.1398}
+                />
+              </>
+            ) : (
+              <>
+                <ResultTable
+                  currency={currency}
+                  callPrice={callPrice}
+                  putPrice={putPrice}
+                  cmp={cmp}
+                  volatility={calculatedVol}
+                />
+              </>
+            )}
 
             <div>
-              {model === "monte-carlo" && monteCarlo64 ? 
-
-              <Image src={monteCarlo64} height={500} width={900} alt="Monte Carlo Simulation"/> 
-              
-              : null}
+              {model === "monte-carlo" ? (
+                monteCarlo64 && !showMonteCarloExample ? (
+                  <Image
+                    src={monteCarlo64}
+                    height={500}
+                    width={900}
+                    alt="Monte Carlo Simulation"
+                  />
+                ) : (
+                  <Image
+                    src={monteCarloExampleImage}
+                    height={500}
+                    width={900}
+                    alt="Monte Carlo Simulation Example"
+                  />
+                )
+              ) : (
+                <p>Scroll Below for Plots</p>
+              )}
             </div>
           </div>
         )}

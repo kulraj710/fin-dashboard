@@ -43,6 +43,7 @@ export default function OptionPricingUI() {
   const [calculatedVol, setCalculatedVol] = useState(0);
   const [loading, setLoading] = useState(false);
   const [showDelayMessage, setShowDelayMessage] = useState(false);
+  const [showMonteCarloExample, setShowMonteCarloExample] = useState(true)
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
@@ -84,6 +85,7 @@ export default function OptionPricingUI() {
       setCalculatedVol(response.volatility);
 
       if (model === "monte-carlo") {
+        setShowMonteCarloExample(false)
         setMonteCarlo64("data:image/png;base64," + response.plot_img_base64);
       }
 
@@ -188,6 +190,7 @@ export default function OptionPricingUI() {
                 model={model}
                 monteCarlo64={monteCarlo64}
                 calculatedVol={calculatedVol}
+                showMonteCarloExample={showMonteCarloExample}
               />
             </div>
 
